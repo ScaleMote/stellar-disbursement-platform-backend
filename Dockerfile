@@ -21,3 +21,4 @@ COPY --from=build /bin/stellar-disbursement-platform /app/
 EXPOSE 8001
 WORKDIR /app
 ENTRYPOINT ["./stellar-disbursement-platform"]
+CMD ["serve"]
