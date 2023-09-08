@@ -14,7 +14,6 @@ RUN go build -o /bin/stellar-disbursement-platform -ldflags "-X main.GitCommit=$
 FROM ubuntu:22.04
 
 ARG DATABASE_URL=DATABASE_URL_DEFAULT_VALUE
-ENV DATABASE_URL=$DATABASE_URL
 
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
 # ADD migrations/ /app/migrations/
@@ -25,3 +24,10 @@ ENTRYPOINT ["./stellar-disbursement-platform"]
 CMD ["serve"]
 RUN ./stellar-disbursement-platform --database-url=$DATABASE_URL db migrate up
 RUN ./stellar-disbursement-platform --database-url=$DATABASE_URL db auth migrate up
+
+ARG ADMIN_MAIL=MAIL_DEFAULT_VALUE
+ARG ADMIN_NAME=NAME_DEFAULT_VALUE
+ARG ADMIN_LAST_NAME=LAST_NAME_DEFAULT_VALUE
+ARG ADMIN_PASSWORD=PASSWORD_DEFAULT_VALUE
+
+RUN echo $ADMIN_PASSWORD | ./stellar-disbursement-platform --database-url=$DATABASE_URL auth add-user $ADMIN_MAIL $ADMIN_NAME $ADMIN_LAST_NAME --password --owner --roles owner
