@@ -4,8 +4,6 @@
 #    make docker-push
 FROM golang:1.20-bullseye as build
 ARG GIT_COMMIT
-ARG DATABASE_URL=DATABASE_URL_DEFAULT_VALUE
-ENV DATABASE_URL=$DATABASE_URL
 
 WORKDIR /src/stellar-disbursement-platform
 ADD go.mod go.sum ./
@@ -15,6 +13,9 @@ RUN go build -o /bin/stellar-disbursement-platform -ldflags "-X main.GitCommit=$
 
 FROM ubuntu:22.04
 
+ARG DATABASE_URL=DATABASE_URL_DEFAULT_VALUE
+ENV DATABASE_URL=$DATABASE_URL
+
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
 # ADD migrations/ /app/migrations/
 COPY --from=build /bin/stellar-disbursement-platform /app/
@@ -22,5 +23,5 @@ EXPOSE 8001
 WORKDIR /app
 ENTRYPOINT ["./stellar-disbursement-platform"]
 CMD ["serve"]
-RUN ./stellar-disbursement-platform db migrate up
-RUN ./stellar-disbursement-platform db auth migrate up
+RUN ./stellar-disbursement-platform --database-url=$DATABASE_URL db migrate up
+RUN ./stellar-disbursement-platform --database-url=$DATABASE_URL db auth migrate up
