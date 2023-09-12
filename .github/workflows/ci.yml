@@ -5,12 +5,13 @@ on:
     branches:
       - main
       - develop
-      - develop-release
+      - "feature/**"
       - "release/**"
       - "releases/**"
       - "hotfix/**"
   pull_request:
-      - develop-release
+    branches: 
+      - "feature/**"
   workflow_call: # allows this workflow to be called from another workflow
 
 jobs:
