@@ -10,6 +10,7 @@ on:
       - "releases/**"
       - "hotfix/**"
   pull_request:
+      - develop-release
   workflow_call: # allows this workflow to be called from another workflow
 
 jobs:
