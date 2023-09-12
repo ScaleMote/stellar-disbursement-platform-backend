@@ -3,12 +3,17 @@ name: Go
 on:
   push:
     branches:
+      - scalemote/prod
       - main
       - develop
+      - "feature/**"
       - "release/**"
       - "releases/**"
       - "hotfix/**"
   pull_request:
+    branches: 
+      - "hotfix/**"
+      - "feature/**"
   workflow_call: # allows this workflow to be called from another workflow
 
 jobs:
