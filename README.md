@@ -1,4 +1,4 @@
-# Stellar Disbursement Platform Backend
+# Stellar Disbursement Platform Backend.
 
 ## Table of Contents
 
