@@ -30,4 +30,5 @@ ARG ADMIN_NAME=NAME_DEFAULT_VALUE
 ARG ADMIN_LAST_NAME=LAST_NAME_DEFAULT_VALUE
 ARG ADMIN_PASSWORD=PASSWORD_DEFAULT_VALUE
 
-RUN echo $ADMIN_PASSWORD | ./stellar-disbursement-platform --database-url=$DATABASE_URL auth add-user $ADMIN_MAIL $ADMIN_NAME $ADMIN_LAST_NAME --password --owner --roles owner
+RUN if [ "$ADMIN_MAIL" != "MAIL_DEFAULT_VALUE" ]; then echo $ADMIN_PASSWORD | ./stellar-disbursement-platform --database-url=$DATABASE_URL auth add-user $ADMIN_MAIL $ADMIN_NAME $ADMIN_LAST_NAME --password --owner --roles owner; \ 
+    fi
