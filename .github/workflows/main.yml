@@ -3,8 +3,6 @@ name: Docker Image CI
 on:
   push:
     branches: ['scalemote/prod']
-  pull_request:
-    branches: ['scalemote/prod']
 
 jobs:
   build:
