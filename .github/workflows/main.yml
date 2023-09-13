@@ -1,0 +1,24 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: ['scalemote/prod']
+  pull_request:
+    branches: ['scalemote/prod']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build the Docker image
+        run: docker build --tag scalemote/sdp-api:${{ github.sha }} --build-arg DATABASE_URL=${{ secrets.PROD_DATABASE_URL}} --build-arg ADMIN_LAST_NAME=${{ secrets.PROD_ADMIN_LAST_NAME }} --build-arg ADMIN_PASSWORD=${{ secrets.PROD_ADMIN_PASSWORD}} --build-arg ADMIN_MAIL=${{ secrets.PROD_ADMIN_MAIL}} --build-arg ADMIN_NAME=${{ secrets.PROD_ADMIN_NAME}} --file ./Dockerfile .
+      - name: Login to ECR
+        id: ecr
+        uses: jwalton/gh-ecr-push@v1
+        with:
+          access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          local-image: scalemote/sdp-api:${{ github.sha }}
+          image: scalemote/sdp-api:${{ github.sha }}, scalemote/sdp-api:latest
