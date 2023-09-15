@@ -3,8 +3,7 @@ version: '3.8'
 networks:
   e2e-network:
     driver: bridge
-
-
+    
 services:
   db:
     container_name: e2e-sdp-v2-database
@@ -207,6 +206,8 @@ services:
       SECRET_SEP10_SIGNING_SEED: ${SEP10_SIGNING_PRIVATE_KEY}
       SECRET_SEP24_INTERACTIVE_URL_JWT_SECRET: jwt_secret_1234567890
       SECRET_SEP24_MORE_INFO_URL_JWT_SECRET: jwt_secret_1234567890
+    networks:
+      - e2e-network
 volumes:
   e2e-postgres-db:
     driver: local
