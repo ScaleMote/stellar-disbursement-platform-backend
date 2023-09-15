@@ -16,6 +16,11 @@ env:
   USER_PASSWORD: "mockPassword123!"
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create network bridge
+        run: docker network create e2e-network
   e2e-integration-test:
     runs-on: ubuntu-latest
     environment: "Receiver Registration - E2E Integration Tests"

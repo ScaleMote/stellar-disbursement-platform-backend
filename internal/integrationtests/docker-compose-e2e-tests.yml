@@ -11,6 +11,8 @@ services:
       - "5432:5432"
     volumes:
       - e2e-postgres-db:/data/postgres
+    networks:
+      - e2e-network
 
   sdp-api:
     container_name: e2e-sdp-api
@@ -80,6 +82,8 @@ services:
         ./stellar-disbursement-platform serve
     depends_on:
       - db
+    networks:
+      - e2e-network
 
   tss:
     container_name: e2e-sdp-tss
@@ -113,6 +117,8 @@ services:
         ./stellar-disbursement-platform channel-accounts verify --delete-invalid-accounts
         ./stellar-disbursement-platform channel-accounts ensure --num-channel-accounts-ensure 1
         ./stellar-disbursement-platform tss
+    networks:
+      - e2e-network
 
   db-anchor-platform:
     container_name: e2e-anchor-platform-postgres-db
@@ -126,7 +132,9 @@ services:
       - "5433:5433"
     volumes:
       - e2e-postgres-ap-db:/data/postgres
-
+    networks:
+      - e2e-network
+      
   anchor-platform:
     container_name: e2e-anchor-platform
     image: stellar/anchor-platform:2.1.3
