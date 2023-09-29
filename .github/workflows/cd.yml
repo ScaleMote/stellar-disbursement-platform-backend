@@ -29,7 +29,7 @@ jobs:
           image: scalemote/sdp-api:${{ github.sha }}, scalemote/sdp-api:latest
 
       - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
+        id: task-def-sdp
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: .aws/task-definition.json
@@ -45,7 +45,7 @@ jobs:
           wait-for-service-stability: true
           
       - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
+        id: task-def-tss
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: .aws/sdp-task-definition.json
