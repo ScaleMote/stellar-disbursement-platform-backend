@@ -22,6 +22,8 @@ EXPOSE 8001
 WORKDIR /app
 ENTRYPOINT ["./stellar-disbursement-platform"]
 CMD ["serve"]
+RUN ./stellar-disbursement-platform --database-url=$DATABASE_URL db migrate up
+RUN ./stellar-disbursement-platform --database-url=$DATABASE_URL db auth migrate up
 
 ARG ADMIN_MAIL=MAIL_DEFAULT_VALUE
 ARG ADMIN_NAME=NAME_DEFAULT_VALUE
