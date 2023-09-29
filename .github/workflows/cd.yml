@@ -32,14 +32,14 @@ jobs:
         id: task-def-sdp
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: .aws/task-definition.json
+          task-definition: .aws/sdp-task-definition.json
           container-name: ${{ secrets.ECS_SDP_CONTAINER_NAME }}
           image: scalemote/sdp-api:${{ github.sha }}, scalemote/sdp-api:latest
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: .aws/task-definition.json
+          task-definition: .aws/sdp-task-definition.json
           service: ${{ secrets.ECS_SDP_SERVICE }}
           cluster: ${{ secrets.ECS_CLUSTER }}
           wait-for-service-stability: true
@@ -48,7 +48,7 @@ jobs:
         id: task-def-tss
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: .aws/sdp-task-definition.json
+          task-definition: .aws/tss-task-definition.json
           container-name: ${{ secrets.ECS_TSS_CONTAINER_NAME }}
           image: scalemote/sdp-api:${{ github.sha }}, scalemote/sdp-api:latest
 
