@@ -79,6 +79,8 @@ func (psh PaymentStatusHistory) Value() (driver.Value, error) {
 	return pq.Array(statusHistoryJSON).Value()
 }
 
+var _ driver.Valuer = (*PaymentStatusHistory)(nil)
+
 // Scan implements the sql.Scanner interface.
 func (psh *PaymentStatusHistory) Scan(src interface{}) error {
 	var statusHistoryJSON []string
@@ -97,6 +99,8 @@ func (psh *PaymentStatusHistory) Scan(src interface{}) error {
 
 	return nil
 }
+
+var _ sql.Scanner = (*PaymentStatusHistory)(nil)
 
 func (p *PaymentInsert) Validate() error {
 	if strings.TrimSpace(p.ReceiverID) == "" {
@@ -163,7 +167,8 @@ func (p *PaymentModel) Get(ctx context.Context, id string, sqlExec db.SQLExecute
 			rw.updated_at as "receiver_wallet.updated_at",
 			rw.receiver_id as "receiver_wallet.receiver.id",
 			w.id as "receiver_wallet.wallet.id",
-			w.name as "receiver_wallet.wallet.name"
+			w.name as "receiver_wallet.wallet.name",
+			w.enabled as "receiver_wallet.wallet.enabled"
 		FROM
 			payments p
 		JOIN disbursements d ON p.disbursement_id = d.id
@@ -239,7 +244,8 @@ func (p *PaymentModel) GetAll(ctx context.Context, queryParams *QueryParams, sql
 			rw.updated_at as "receiver_wallet.updated_at",
 			rw.receiver_id as "receiver_wallet.receiver.id",
 			w.id as "receiver_wallet.wallet.id",
-			w.name as "receiver_wallet.wallet.name"
+			w.name as "receiver_wallet.wallet.name",
+			w.enabled as "receiver_wallet.wallet.enabled"
 		FROM
 			payments p
 		JOIN disbursements d on p.disbursement_id = d.id
