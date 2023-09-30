@@ -45,19 +45,13 @@ type ProfileHandler struct {
 }
 
 type PatchOrganizationProfileRequest struct {
-	OrganizationName               string  `json:"organization_name"`
-	TimezoneUTCOffset              string  `json:"timezone_utc_offset"`
-	IsApprovalRequired             *bool   `json:"is_approval_required"`
-	SMSRegistrationMessageTemplate *string `json:"sms_registration_message_template"`
-	OTPMessageTemplate             *string `json:"otp_message_template"`
+	OrganizationName   string `json:"organization_name"`
+	TimezoneUTCOffset  string `json:"timezone_utc_offset"`
+	IsApprovalRequired *bool  `json:"is_approval_required"`
 }
 
 func (r *PatchOrganizationProfileRequest) AreAllFieldsEmpty() bool {
-	return (r.OrganizationName == "" &&
-		r.TimezoneUTCOffset == "" &&
-		r.IsApprovalRequired == nil &&
-		r.SMSRegistrationMessageTemplate == nil &&
-		r.OTPMessageTemplate == nil)
+	return r.OrganizationName == "" && r.TimezoneUTCOffset == "" && r.IsApprovalRequired == nil
 }
 
 type PatchUserProfileRequest struct {
@@ -150,12 +144,10 @@ func (h ProfileHandler) PatchOrganizationProfile(rw http.ResponseWriter, req *ht
 	}
 
 	err = h.Models.Organizations.Update(ctx, &data.OrganizationUpdate{
-		Name:                           reqBody.OrganizationName,
-		Logo:                           fileContentBytes,
-		TimezoneUTCOffset:              reqBody.TimezoneUTCOffset,
-		IsApprovalRequired:             reqBody.IsApprovalRequired,
-		SMSRegistrationMessageTemplate: reqBody.SMSRegistrationMessageTemplate,
-		OTPMessageTemplate:             reqBody.OTPMessageTemplate,
+		Name:               reqBody.OrganizationName,
+		Logo:               fileContentBytes,
+		TimezoneUTCOffset:  reqBody.TimezoneUTCOffset,
+		IsApprovalRequired: reqBody.IsApprovalRequired,
 	})
 	if err != nil {
 		httperror.InternalError(ctx, "Cannot update organization", err, nil).Render(rw)

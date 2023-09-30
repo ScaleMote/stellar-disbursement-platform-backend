@@ -127,8 +127,7 @@ func Test_PaymentsHandlerGet(t *testing.T) {
 				},
 				"wallet": {
 					"id": %q,
-					"name": "wallet1",
-					"enabled": true
+					"name": "wallet1"
 				},
 				"stellar_address": %q,
 				"stellar_memo": %q,

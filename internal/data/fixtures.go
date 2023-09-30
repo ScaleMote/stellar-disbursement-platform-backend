@@ -336,7 +336,7 @@ func CreateReceiverVerificationFixture(t *testing.T, ctx context.Context, sqlExe
 		VALUES
 			($1, $2, $3)
 		RETURNING
-			*
+			receiver_id, verification_field, hashed_value, attempts, created_at, confirmed_at, updated_at, failed_at
 	`
 
 	var verification ReceiverVerification
@@ -385,6 +385,7 @@ func CreateReceiverWalletFixture(t *testing.T, ctx context.Context, sqlExec db.S
 			JOIN wallets AS w ON rw.wallet_id = w.id
 	`
 
+	var statusHistoryJSON pq.ByteaArray
 	var receiverWallet ReceiverWallet
 	err = sqlExec.QueryRowxContext(ctx, query, receiverID, walletID, stellarAddress, stellarMemo, stellarMemoType, status).Scan(
 		&receiverWallet.ID,
@@ -392,7 +393,7 @@ func CreateReceiverWalletFixture(t *testing.T, ctx context.Context, sqlExec db.S
 		&receiverWallet.StellarMemo,
 		&receiverWallet.StellarMemoType,
 		&receiverWallet.Status,
-		&receiverWallet.StatusHistory,
+		&statusHistoryJSON,
 		&receiverWallet.CreatedAt,
 		&receiverWallet.UpdatedAt,
 		&receiverWallet.Receiver.ID,
@@ -410,11 +411,16 @@ func CreateReceiverWalletFixture(t *testing.T, ctx context.Context, sqlExec db.S
 	)
 	require.NoError(t, err)
 
+	err = receiverWallet.statusHistoryFromByteArray(statusHistoryJSON)
+	require.NoError(t, err)
+
 	return &receiverWallet
 }
 
 func DeleteAllReceiverWalletsFixtures(t *testing.T, ctx context.Context, sqlExec db.SQLExecuter) {
-	const query = "DELETE FROM receiver_wallets"
+	const query = `
+		DELETE FROM receiver_wallets
+	`
 	_, err := sqlExec.ExecContext(ctx, query)
 	require.NoError(t, err)
 }
@@ -718,16 +724,4 @@ func CreateMockImage(t *testing.T, width, height int, size ImageSize) image.Imag
 	}
 
 	return img
-}
-
-func DeleteAllFixtures(t *testing.T, ctx context.Context, sqlExec db.SQLExecuter) {
-	DeleteAllMessagesFixtures(t, ctx, sqlExec)
-	DeleteAllPaymentsFixtures(t, ctx, sqlExec)
-	DeleteAllReceiverVerificationFixtures(t, ctx, sqlExec)
-	DeleteAllReceiverWalletsFixtures(t, ctx, sqlExec)
-	DeleteAllReceiversFixtures(t, ctx, sqlExec)
-	DeleteAllDisbursementFixtures(t, ctx, sqlExec)
-	DeleteAllWalletFixtures(t, ctx, sqlExec)
-	DeleteAllAssetFixtures(t, ctx, sqlExec)
-	DeleteAllCountryFixtures(t, ctx, sqlExec)
 }

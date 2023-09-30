@@ -2,7 +2,6 @@ package utils
 
 import (
 	"context"
-	"math/rand"
 	"testing"
 
 	"github.com/stellar/stellar-disbursement-platform-backend/internal/db"
@@ -17,8 +16,7 @@ func TestAdvisoryLockAndRelease(t *testing.T) {
 	defer dbt.Close()
 
 	// Creates a database pool
-	lockKey := rand.Intn(100000)
-
+	lockKey := 123
 	dbConnectionPool1, err := db.OpenDBConnectionPool(dbt.DSN)
 	require.NoError(t, err)
 	lockAcquired, err := AcquireAdvisoryLock(ctx, dbConnectionPool1, lockKey)

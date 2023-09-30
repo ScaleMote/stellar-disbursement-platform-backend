@@ -5,17 +5,8 @@
 
 DROP TABLE IF EXISTS public.on_off_switch CASCADE;
 DROP TABLE IF EXISTS public.payments_semaphore CASCADE;
-ALTER TABLE public.withdrawal RENAME COLUMN account_id TO receiver_id;
-
--- +migrate StatementBegin
--- Delete withdrawal table if it is empty
-DO $$
-BEGIN 
-    IF (SELECT COUNT(*) FROM public.withdrawal) = 0 THEN 
-        EXECUTE 'DROP TABLE public.withdrawal'; 
-    END IF; 
-END $$;
--- +migrate StatementEnd
+DROP TABLE IF EXISTS public.withdrawal CASCADE;
 
 
 -- +migrate Down
+
